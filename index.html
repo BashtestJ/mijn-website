@@ -3,33 +3,483 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mijn Bijgewerkte Website</title>
+    <title>Thomas More | Roadmap Graduaat Systeem- en Netwerkbeheer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        :root {
+            --bg-base: #0b0f19;
+            --bg-card: #151b2b;
+            --bg-card-hover: #1e2638;
+            --border: #232d42;
+            --accent-tm: #e63946;
+            --cyan: #38bdf8;
+            --green: #22c55e;
+            --orange: #f97316;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --glow: 0 0 25px rgba(56, 189, 248, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
-            background: #0f172a;
-            color: #f8fafc;
+            padding: 0;
         }
-        .card {
-            background: #1e293b;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 1.5rem 6rem;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(var(--border) 1px, transparent 1px);
+            background-size: 28px 28px;
+            opacity: 0.35;
+            z-index: -1;
+        }
+
+        header {
             text-align: center;
-            border: 1px solid #334155;
+            max-width: 760px;
+            margin-bottom: 2.5rem;
         }
-        h1 { color: #38bdf8; }
+
+        .badge {
+            display: inline-block;
+            background: rgba(230, 57, 70, 0.15);
+            color: var(--accent-tm);
+            border: 1px solid rgba(230, 57, 70, 0.4);
+            padding: 0.35rem 1rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #ffffff 40%, var(--cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .progress-hud {
+            position: sticky;
+            top: 1rem;
+            z-index: 50;
+            background: rgba(21, 27, 43, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.2rem 2rem;
+            width: 100%;
+            max-width: 680px;
+            margin-bottom: 3.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .hud-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .hud-stats span {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--cyan);
+        }
+
+        .progress-track {
+            height: 12px;
+            background: var(--bg-base);
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cyan), var(--green));
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--glow);
+        }
+
+        .roadmap {
+            position: relative;
+            max-width: 650px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .roadmap::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 2rem;
+            bottom: 6rem;
+            width: 4px;
+            background: linear-gradient(180deg, var(--cyan), var(--border) 80%);
+            transform: translateX(-50%);
+            z-index: 0;
+            border-radius: 2px;
+        }
+
+        .fase-title {
+            position: relative;
+            z-index: 2;
+            align-self: center;
+            background: var(--bg-base);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 1.2rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .node {
+            position: relative;
+            z-index: 2;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .node:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: var(--cyan);
+            box-shadow: var(--glow);
+            background: var(--bg-card-hover);
+        }
+
+        .node-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .node-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .node-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .node-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .sp-pill {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.55rem;
+            border-radius: 6px;
+            color: var(--text-muted);
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .node.completed {
+            border-color: var(--green);
+            background: rgba(34, 197, 94, 0.08);
+        }
+
+        .node.completed .checkbox {
+            background: var(--green);
+            border-color: var(--green);
+        }
+
+        .node.completed .checkbox::after {
+            content: "✓";
+            color: #000;
+            font-weight: 800;
+            font-size: 0.85rem;
+        }
+
+        .node.completed .node-title {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .trophy-node {
+            position: relative;
+            z-index: 2;
+            align-self: center;
+            background: linear-gradient(135deg, rgba(230, 57, 70, 0.2), rgba(56, 189, 248, 0.2));
+            border: 2px dashed var(--cyan);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            max-width: 480px;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.4s ease;
+        }
+
+        .trophy-node.unlocked {
+            border: 2px solid var(--green);
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(56, 189, 248, 0.2));
+            box-shadow: 0 0 35px rgba(34, 197, 94, 0.35);
+        }
+
+        .trophy-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Update Gelukt! 🚀</h1>
-        <p>Deze wijziging is zojuist live gepusht via de terminal.</p>
+
+    <header>
+        <div class="badge">Thomas More • Werktraject</div>
+        <h1>Graduaat Systeem- en Netwerkbeheer</h1>
+        <p>Stel interactief je haalbare studietraject samen. Klik op een vak om het op te nemen of af te vinken en volg je studiepunten live richting je diploma.</p>
+    </header>
+
+    <div class="progress-hud">
+        <div class="hud-stats">
+            <div>Opgenomen studiepunten: <span id="sp-count">0</span> / 120 SP</div>
+            <div>Status: <span id="progress-percent">0%</span></div>
+        </div>
+        <div class="progress-track">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
     </div>
+
+    <div class="roadmap">
+        <div class="fase-title">Fase 1: Fundamenten &amp; Hardware</div>
+
+        <div class="node" data-sp="6">
+            <div class="node-left">
+                <div class="node-title">IT Essentials &amp; Hardware</div>
+                <div class="node-desc">Basisarchitectuur, pc-assemblage en diagnose</div>
+            </div>
+            <div class="node-right">
+                <span class="sp-pill">6 SP</span>
+                <div class="checkbox"></div>
+            </div>
+        </div>
+
+        <div class="node" data-sp="6">
+            <div class="node-left">
+                <div class="node-title">Routing &amp; Switching Essentials</div>
+                <div class="node-desc">Cisco netwerkprotocollen, switches, VLAN's en IPv4/IPv6</div>
+            </div>
+            <div class="node-right">
+                <span class="sp-pill">6 SP</span>
+                <div class="checkbox"></div>
+            </div>
+        </div>
+
+        <div class="node" data-sp="6">
+            <div class="node-left">
+                <div class="node-title">Linux Fundamentals &amp; Bash</div>
+                <div class="node-desc">Terminal-navigatie, scripting en gebruikersbeheer</div>
+            </div>
+            <div class="node-right">
+                <span class="sp-pill">6 SP</span>
+                <div class="checkbox"></div>
+            </div>
+        </div>
+
+        <div class="node" data-sp="6">
+            <div class="node-left">
+                <div class="node-title">Windows Server Administration</div>
+                <div class="node-desc">Active Directory, Group Policies, DNS en DHCP</div>
+            </div>
+            <div class="node-right">
+                <span class="sp-pill">6 SP</span>
+                <div class="checkbox"></div>
+            </div>
+        </div>
+
+        <div class="fase-title">Fase 2: Cloud, Security &amp; Automatisatie</div>
+
+        <div class="node" data-sp="6">
+            <div class="node-left">
+                <div class="node-title">Cybersecurity Foundations</div>
+                <div class="node-desc">Netwerkverdediging, firewalls, encryptie en risicoanalyses</div>
+            </div>
+            <div class="node-right">
+                <span class="sp-pill">6 SP</span>
+                <div class="checkbox"></div>
+            </div>
+        </div>
+
+        <div class="node" data-sp="6">
+            <div class="node-left">
+                <div class="node-title">Cloud Infrastructure (Azure / AWS)</div>
+                <div class="node-desc">Virtual Machines, cloud networking en identiteitsbeheer</div>
+            </div>
+            <div class="node-right">
+                <span class="sp-pill">6 SP</span>
+                <div class="checkbox"></div>
+            </div>
+        </div>
+
+        <div class="node" data-sp="6">
+            <div class="node-left">
+                <div class="node-title">DevOps &amp; Automation (Ansible / Python)</div>
+                <div class="node-desc">Infrastructure as Code en configuratieautomatisatie</div>
+            </div>
+            <div class="node-right">
+                <span class="sp-pill">6 SP</span>
+                <div class="checkbox"></div>
+            </div>
+        </div>
+
+        <div class="fase-title">Fase 3: Werkplekleren &amp; Afstuderen</div>
+
+        <div class="node" data-sp="30">
+            <div class="node-left">
+                <div class="node-title">Werkplekleren 1 (Stage / Werkplek)</div>
+                <div class="node-desc">Praktijkervaring binnen een bedrijf of je eigen werkomgeving</div>
+            </div>
+            <div class="node-right">
+                <span class="sp-pill">30 SP</span>
+                <div class="checkbox"></div>
+            </div>
+        </div>
+
+        <div class="node" data-sp="48">
+            <div class="node-left">
+                <div class="node-title">Werkplekleren 2 &amp; Graduaatsproef</div>
+                <div class="node-desc">Eindstage, integratieproject en verdediging voor de jury</div>
+            </div>
+            <div class="node-right">
+                <span class="sp-pill">48 SP</span>
+                <div class="checkbox"></div>
+            </div>
+        </div>
+
+        <div class="trophy-node" id="trophy">
+            <div class="trophy-icon" id="trophy-icon">🎓</div>
+            <h2 id="trophy-title" style="font-size: 1.4rem; margin-bottom: 0.5rem;">Graduaat Diploma</h2>
+            <p id="trophy-text" style="color: var(--text-muted); font-size: 0.9rem;">
+                Selecteer je vakken hierboven om je route naar 120 studiepunten te visualiseren.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const nodes = document.querySelectorAll('.node');
+        const spCountEl = document.getElementById('sp-count');
+        const progressPercentEl = document.getElementById('progress-percent');
+        const progressBar = document.getElementById('progress-bar');
+        const trophy = document.getElementById('trophy');
+        const trophyTitle = document.getElementById('trophy-title');
+        const trophyText = document.getElementById('trophy-text');
+        const trophyIcon = document.getElementById('trophy-icon');
+
+        const TOTAAL_SP = 120;
+
+        const opgeslagenStatus = JSON.parse(localStorage.getItem('tm_roadmap_status')) || [];
+
+        nodes.forEach((node, index) => {
+            if (opgeslagenStatus.includes(index)) {
+                node.classList.add('completed');
+            }
+
+            node.addEventListener('click', () => {
+                node.classList.toggle('completed');
+                updateVoortgang();
+            });
+        });
+
+        function updateVoortgang() {
+            let huidigeSP = 0;
+            const bewaardeIndices = [];
+
+            nodes.forEach((node, index) => {
+                if (node.classList.contains('completed')) {
+                    huidigeSP += parseInt(node.getAttribute('data-sp'), 10);
+                    bewaardeIndices.push(index);
+                }
+            });
+
+            localStorage.setItem('tm_roadmap_status', JSON.stringify(bewaardeIndices));
+
+            const percentage = Math.min(Math.round((huidigeSP / TOTAAL_SP) * 100), 100);
+
+            spCountEl.textContent = huidigeSP;
+            progressPercentEl.textContent = percentage + '%';
+            progressBar.style.width = percentage + '%';
+
+            if (huidigeSP >= TOTAAL_SP) {
+                trophy.classList.add('unlocked');
+                trophyIcon.textContent = '🏆';
+                trophyTitle.textContent = 'Gefeliciteerd! Graduaat Behaald!';
+                trophyText.textContent = 'Je hebt 120 studiepunten behaald en bent klaar om als Systeem- en Netwerkbeheerder het werkveld in te gaan!';
+                trophyTitle.style.color = 'var(--green)';
+            } else {
+                trophy.classList.remove('unlocked');
+                trophyIcon.textContent = '🎓';
+                trophyTitle.textContent = 'Graduaat Diploma';
+                trophyText.textContent = `Nog ${TOTAAL_SP - huidigeSP} SP nodig om de eindmeet te halen.`;
+                trophyTitle.style.color = 'var(--text)';
+            }
+        }
+
+        updateVoortgang();
+    </script>
 </body>
 </html>
